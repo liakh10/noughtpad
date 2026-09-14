@@ -58,8 +58,8 @@ h3{font-family:"Syne",sans-serif;font-weight:700;font-size:18px;letter-spacing:-
 section.s{margin-top:clamp(40px,6vw,76px)}
 /* hero */
 .hero{position:relative;margin:0 calc(var(--pad)*-1);padding:clamp(40px,7vw,90px) var(--pad) clamp(30px,5vw,60px);overflow:hidden;border-bottom:1px solid var(--line)}
-.hero .bg{position:absolute;inset:0;background:url(/assets/img/hero.webp) 72% 50%/cover no-repeat;opacity:.95}
-.hero .bg:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,var(--bg) 18%,rgba(11,10,23,.6) 48%,rgba(11,10,23,0) 70%),linear-gradient(0deg,var(--bg),transparent 30%)}
+.hero .bg{position:absolute;top:0;bottom:0;right:0;left:34%;background:url(/assets/img/hero.webp) 50% 50%/cover no-repeat;opacity:.95}
+.hero .bg:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,var(--bg) 0%,rgba(11,10,23,0) 30%),linear-gradient(0deg,var(--bg),transparent 30%)}
 .hero .in{position:relative}
 .hero h1{font-size:clamp(44px,7.2vw,96px);max-width:10.5ch}
 .hero h1 em{font-style:normal;color:var(--acc)}
@@ -150,9 +150,10 @@ textarea.inp{height:96px;padding:12px 14px;resize:vertical}
 .tstats b{display:block;margin-top:3px;font-family:"Syne",sans-serif;font-weight:700;font-size:clamp(16px,1.9vw,21px)}
 .lay{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:14px;margin-top:14px;align-items:start}
 .lay>*,.create>*{min-width:0}
-.col{display:grid;gap:14px}
+.col{display:grid;gap:14px;grid-template-columns:minmax(0,1fr)}
+.col>*{min-width:0}
 .chart{height:280px;position:relative}
-.chart svg{width:100%;height:100%;display:block}
+.chart svg{position:absolute;inset:0;width:100%;height:100%;display:block}
 .tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:4px;border-radius:999px;background:var(--bg2);border:1px solid var(--line)}
 .tabs button{height:34px;border-radius:999px;color:var(--dim)}
 .tabs button.on{background:var(--acc);color:#140f2e}
@@ -192,10 +193,12 @@ footer a:hover{color:var(--ink)}
   .sticky{position:static}
 }
 @media (max-width:640px){
+  .top{backdrop-filter:none;-webkit-backdrop-filter:none;background:rgba(11,10,23,.97);gap:8px}
   .nav{position:fixed;left:0;right:0;bottom:0;margin:0;justify-content:space-around;padding:8px 10px calc(8px + env(safe-area-inset-bottom));background:rgba(11,10,23,.94);border-top:1px solid var(--line);backdrop-filter:blur(12px)}
   main{padding-bottom:90px}
   .brand span,.top .hidem{display:none}
-  .hero .bg{background-position:62% 50%;opacity:.55}
+  .hero .bg{left:0;background-position:70% 50%;opacity:.45}
+  .net span{display:none}
   .steps{grid-template-columns:repeat(3,minmax(0,1fr))} .steps button span{display:none}
   .picks{grid-template-columns:minmax(0,1fr)}
   .tstats{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
@@ -284,6 +287,7 @@ function render() {
 }
 function paint() { ({ home: paintHome, discover: paintDiscover, create: paintCreate, token: paintToken, wallet: paintWallet })[route](); }
 addEventListener('hashchange', render);
+addEventListener('resize', () => { if (route === 'token' && ST.token && $('chart')) drawChart(ST.token); });
 
 /* ---------- overview ---------- */
 function bindHome() {
