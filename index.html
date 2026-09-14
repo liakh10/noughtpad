@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/config.js"></script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Noughtpad · $NOUGHT</title>
+<meta name="description" content="Launch a token on Robinhood Chain and route its trading fees into rewards for holders on BNB Chain, Base, Ethereum or Hyperliquid" />
+<meta property="og:image" content="/assets/img/og.webp" />
+<link rel="icon" type="image/png" href="/assets/img/favicon.png" />
+<link rel="apple-touch-icon" href="/assets/img/apple-icon.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+:root{--bg:#0b0a17;--bg2:#100e20;--panel:#15132a;--panel2:#1b1935;--line:#28244a;--ink:#efeafc;--dim:#8f89b0;--acc:#b9a6ff;--acc2:#7ef0c9;--gold:#f3c85a;--red:#ff7a8a;--pad:clamp(14px,3vw,36px);--r:18px}
+*{box-sizing:border-box;margin:0;padding:0}
+html{overflow-x:hidden;background:var(--bg)}
+body{background:var(--bg);color:var(--ink);font-family:"DM Mono",ui-monospace,monospace;font-size:13.5px;line-height:1.55;-webkit-font-smoothing:antialiased;min-height:100vh}
+a{color:inherit;text-decoration:none}
+button,input,textarea,select{font:inherit;color:inherit}
+button{background:none;border:0;cursor:pointer}
+img{display:block;max-width:100%}
+.d{font-family:"Syne",sans-serif;letter-spacing:-.02em}
+.k{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
+.dim{color:var(--dim)}
+.up{color:var(--acc2)} .down{color:var(--red)}
+.num{font-variant-numeric:tabular-nums}
+/* top */
+.top{position:sticky;top:0;z-index:40;display:flex;align-items:center;gap:14px;padding:12px var(--pad);background:rgba(11,10,23,.82);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:9px;font-family:"Syne",sans-serif;font-weight:800;font-size:19px;letter-spacing:-.03em}
+.brand img{width:30px;height:30px;border-radius:9px}
+.nav{display:flex;gap:4px;margin-left:10px}
+.nav a{padding:7px 12px;border-radius:999px;color:var(--dim);transition:.15s}
+.nav a:hover{color:var(--ink)} .nav a.on{background:var(--panel2);color:var(--ink)}
+.sp{flex:1}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:38px;padding:0 16px;border-radius:999px;border:1px solid var(--line);background:var(--panel);font-weight:500;white-space:nowrap;transition:transform .12s,border-color .15s,background .15s}
+.btn:hover{border-color:var(--acc);transform:translateY(-1px)}
+.btn.pri{background:var(--acc);border-color:var(--acc);color:#140f2e}
+.btn.pri:hover{background:#cbbcff}
+.btn.big{height:48px;padding:0 22px;font-size:14.5px}
+.btn img{width:16px;height:16px;object-fit:contain}
+.btn.pri img{filter:brightness(0)}
+.btn.icon{width:38px;padding:0}
+.btn:disabled{opacity:.45;pointer-events:none}
+.wal{display:flex;align-items:center;gap:8px;height:38px;padding:0 6px 0 14px;border-radius:999px;border:1px solid var(--line);background:var(--panel)}
+.wal b{font-weight:500}
+.wal .btn{height:28px;padding:0 10px;font-size:12px}
+main{padding:0 var(--pad) 60px}
+.in{width:min(1180px,100%);margin:0 auto}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--r)}
+.pp{padding:clamp(16px,2.2vw,24px)}
+h1{font-family:"Syne",sans-serif;font-weight:800;letter-spacing:-.04em;line-height:.95}
+h2{font-family:"Syne",sans-serif;font-weight:800;letter-spacing:-.03em;font-size:clamp(26px,3.4vw,40px);line-height:1}
+h3{font-family:"Syne",sans-serif;font-weight:700;font-size:18px;letter-spacing:-.02em}
+.row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.between{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+section.s{margin-top:clamp(40px,6vw,76px)}
+/* hero */
+.hero{position:relative;margin:0 calc(var(--pad)*-1);padding:clamp(40px,7vw,90px) var(--pad) clamp(30px,5vw,60px);overflow:hidden;border-bottom:1px solid var(--line)}
+.hero .bg{position:absolute;inset:0;background:url(/assets/img/hero.webp) 72% 50%/cover no-repeat;opacity:.95}
+.hero .bg:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,var(--bg) 18%,rgba(11,10,23,.6) 48%,rgba(11,10,23,0) 70%),linear-gradient(0deg,var(--bg),transparent 30%)}
+.hero .in{position:relative}
+.hero h1{font-size:clamp(44px,7.2vw,96px);max-width:10.5ch}
+.hero h1 em{font-style:normal;color:var(--acc)}
+.hero p{margin-top:18px;max-width:46ch;color:#cfc8ea;font-size:14.5px}
+.hero .row{margin-top:26px}
+.nets{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:clamp(28px,5vw,54px)}
+.net{display:flex;align-items:center;gap:10px;padding:14px 16px;border-radius:14px;background:rgba(21,19,42,.75);border:1px solid var(--line);backdrop-filter:blur(6px)}
+.dot{width:12px;height:12px;border-radius:50%;flex:none;box-shadow:0 0 12px currentColor}
+.net span{margin-left:auto;color:var(--dim);font-size:12px}
+/* contract */
+.ca{margin:0 auto;width:min(760px,100%);text-align:center;cursor:pointer;padding:20px 16px}
+.ca .lbl{font-size:11px;letter-spacing:.3em;color:var(--dim)}
+.ca .addr{margin-top:8px;font-weight:500;font-size:clamp(9px,2.5vw,16px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ca .addr.soon{font-family:"Syne",sans-serif;font-weight:800;font-size:clamp(38px,6vw,56px);line-height:1;color:var(--acc)}
+.ca.live{border-color:var(--acc)} .ca.live .addr{color:var(--acc);text-shadow:0 0 16px rgba(185,166,255,.55)}
+.ca .cp{margin-top:8px;font-size:12px;letter-spacing:.18em}
+/* cards */
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.tcard{display:flex;flex-direction:column;gap:12px;padding:16px;transition:border-color .15s,transform .15s}
+.tcard:hover{border-color:var(--acc);transform:translateY(-2px)}
+.tico{width:52px;height:52px;border-radius:14px;object-fit:cover;background:var(--panel2);flex:none}
+.tico.ph{display:grid;place-items:center;font-family:"Syne",sans-serif;font-weight:800;color:var(--acc)}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border-radius:999px;background:var(--panel2);border:1px solid var(--line);font-size:11.5px;white-space:nowrap}
+.chip .dot{width:8px;height:8px;box-shadow:none}
+.kv{display:grid;grid-template-columns:1fr 1fr;gap:8px 12px}
+.kv div{display:flex;flex-direction:column}
+.kv b{font-weight:500}
+/* route */
+.route{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;position:relative}
+.step{padding:18px;position:relative;overflow:hidden}
+.step .n{font-family:"Syne",sans-serif;font-weight:800;font-size:40px;line-height:1;color:var(--line)}
+.step h3{margin-top:10px}
+.step p{margin-top:6px;color:var(--dim);font-size:12.5px}
+.step.on{border-color:var(--acc)} .step.on .n{color:var(--acc)}
+.step.on:after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:linear-gradient(90deg,transparent,var(--acc),transparent);animation:sweep 1.4s linear infinite}
+@keyframes sweep{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:12px}
+.stat{padding:16px}
+.stat b{display:block;margin-top:4px;font-family:"Syne",sans-serif;font-weight:700;font-size:clamp(20px,2.4vw,28px);letter-spacing:-.02em}
+/* faq */
+.faq details{border-top:1px solid var(--line);padding:16px 2px}
+.faq details:last-child{border-bottom:1px solid var(--line)}
+.faq summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;gap:12px;font-family:"Syne",sans-serif;font-weight:700;font-size:17px}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary:after{content:"+";color:var(--acc);font-family:"DM Mono",monospace}
+.faq details[open] summary:after{content:"−"}
+.faq p{margin-top:10px;color:#cfc8ea;max-width:72ch}
+/* discover */
+.search{display:flex;gap:8px;margin-top:18px}
+.search input{flex:1;min-width:0;height:44px;padding:0 16px;border-radius:999px;border:1px solid var(--line);background:var(--panel);outline:none}
+.search input:focus{border-color:var(--acc)}
+.tbl{width:100%;border-collapse:collapse;min-width:760px}
+.tbl th{text-align:left;font-weight:400;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);padding:12px 14px;border-bottom:1px solid var(--line)}
+.tbl td{padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:middle}
+.tbl tr.link{cursor:pointer} .tbl tr.link:hover td{background:var(--panel2)}
+.tbl .tico{width:40px;height:40px;border-radius:11px}
+.scroll{overflow-x:auto}
+/* forms */
+label.f{display:flex;flex-direction:column;gap:6px;margin-top:14px}
+.inp{height:44px;padding:0 14px;border-radius:12px;border:1px solid var(--line);background:var(--bg2);outline:none;width:100%}
+textarea.inp{height:96px;padding:12px 14px;resize:vertical}
+.inp:focus{border-color:var(--acc)}
+.pre{display:flex;align-items:center;border-radius:12px;border:1px solid var(--line);background:var(--bg2)}
+.pre span{padding-left:14px;color:var(--dim)} .pre .inp{border:0;background:none}
+.steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:18px}
+.steps button{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;border:1px solid var(--line);color:var(--dim);text-align:left}
+.steps button i{font-style:normal;width:24px;height:24px;border-radius:8px;display:grid;place-items:center;background:var(--panel2);font-size:12px}
+.steps button.on{border-color:var(--acc);color:var(--ink)} .steps button.on i{background:var(--acc);color:#140f2e}
+.steps button.done i{background:var(--acc2);color:#0b1a14}
+.create{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px;align-items:start}
+.upload{display:grid;place-items:center;aspect-ratio:1;width:140px;border-radius:18px;border:1px dashed var(--line);background:var(--bg2);cursor:pointer;overflow:hidden;color:var(--dim);text-align:center;font-size:12px}
+.upload img{width:100%;height:100%;object-fit:cover}
+.picks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:10px}
+.pick{display:flex;align-items:center;gap:10px;padding:14px;border-radius:14px;border:1px solid var(--line);background:var(--bg2);text-align:left}
+.pick.on{border-color:var(--acc);box-shadow:0 0 0 3px rgba(185,166,255,.15)}
+.pick small{display:block;color:var(--dim)}
+.flow{display:grid;gap:8px;margin-top:14px}
+.flow div{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;background:var(--bg2);border:1px solid var(--line)}
+.flow div i{font-style:normal;width:22px;height:22px;border-radius:7px;display:grid;place-items:center;background:var(--panel2);font-size:11px;color:var(--acc)}
+.flow div span{margin-left:auto;color:var(--dim);font-size:12px;text-align:right}
+.sticky{position:sticky;top:78px}
+/* token */
+.thead{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-top:24px}
+.thead .tico{width:72px;height:72px;border-radius:20px}
+.thead h1{font-size:clamp(30px,4.4vw,48px)}
+.tstats{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;margin-top:18px}
+.tstats div{background:var(--panel);padding:14px 16px}
+.tstats b{display:block;margin-top:3px;font-family:"Syne",sans-serif;font-weight:700;font-size:clamp(16px,1.9vw,21px)}
+.lay{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:14px;margin-top:14px;align-items:start}
+.lay>*,.create>*{min-width:0}
+.col{display:grid;gap:14px}
+.chart{height:280px;position:relative}
+.chart svg{width:100%;height:100%;display:block}
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:4px;border-radius:999px;background:var(--bg2);border:1px solid var(--line)}
+.tabs button{height:34px;border-radius:999px;color:var(--dim)}
+.tabs button.on{background:var(--acc);color:#140f2e}
+.tabs button.on.sell{background:var(--red)}
+.presets{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.presets button{padding:5px 11px;border-radius:999px;border:1px solid var(--line);font-size:12px}
+.presets button:hover{border-color:var(--acc)}
+.quote{margin-top:12px;display:grid;gap:6px;font-size:12.5px}
+.quote div{display:flex;justify-content:space-between;gap:10px}
+.svc{display:flex;align-items:center;gap:8px}
+.live{width:8px;height:8px;border-radius:50%;background:var(--acc2);box-shadow:0 0 0 0 rgba(126,240,201,.6);animation:ping 1.8s infinite}
+@keyframes ping{70%{box-shadow:0 0 0 8px rgba(126,240,201,0)}100%{box-shadow:0 0 0 0 rgba(126,240,201,0)}}
+.bar{height:8px;border-radius:8px;background:var(--bg2);border:1px solid var(--line);overflow:hidden;margin-top:6px}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--acc),var(--acc2));transition:width .6s}
+.pipe{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-top:12px}
+.pipe div{padding:8px 6px;border-radius:10px;border:1px solid var(--line);background:var(--bg2);text-align:center;font-size:11.5px;color:var(--dim)}
+.pipe div.done{color:var(--acc2);border-color:rgba(126,240,201,.35)}
+.pipe div.on{color:var(--ink);border-color:var(--acc);animation:glow 1.2s ease-in-out infinite}
+@keyframes glow{50%{box-shadow:0 0 16px rgba(185,166,255,.35)}}
+.list{display:grid;gap:2px;margin-top:10px}
+.list>div{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;padding:9px 10px;border-radius:10px}
+.list>div:nth-child(odd){background:var(--bg2)}
+.list>div.me{outline:1px solid var(--acc)}
+.rtbl{width:100%;border-collapse:collapse;font-size:12.5px;min-width:520px}
+.rtbl th{text-align:left;font-weight:400;color:var(--dim);font-size:11px;letter-spacing:.12em;text-transform:uppercase;padding:8px 10px;border-bottom:1px solid var(--line)}
+.rtbl td{padding:10px;border-bottom:1px solid var(--line)}
+.empty{padding:22px;text-align:center;color:var(--dim)}
+.toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,16px);opacity:0;z-index:80;background:var(--panel2);border:1px solid var(--acc);border-radius:14px;padding:11px 16px;transition:.2s;pointer-events:none;max-width:calc(100% - 28px)}
+.toast.on{opacity:1;transform:translate(-50%,0)} .toast.bad{border-color:var(--red)}
+footer{padding:26px var(--pad);border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:var(--dim);font-size:12px}
+footer a:hover{color:var(--ink)}
+@media (max-width:980px){
+  .nets,.route,.stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .grid3{grid-template-columns:minmax(0,1fr)}
+  .lay,.create{grid-template-columns:minmax(0,1fr)}
+  .tstats{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .sticky{position:static}
+}
+@media (max-width:640px){
+  .nav{position:fixed;left:0;right:0;bottom:0;margin:0;justify-content:space-around;padding:8px 10px calc(8px + env(safe-area-inset-bottom));background:rgba(11,10,23,.94);border-top:1px solid var(--line);backdrop-filter:blur(12px)}
+  main{padding-bottom:90px}
+  .brand span,.top .hidem{display:none}
+  .hero .bg{background-position:62% 50%;opacity:.55}
+  .steps{grid-template-columns:repeat(3,minmax(0,1fr))} .steps button span{display:none}
+  .picks{grid-template-columns:minmax(0,1fr)}
+  .tstats{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  footer{padding-bottom:90px}
+}
+@media (prefers-reduced-motion:reduce){ *{animation:none!important;transition:none!important} }
+</style>
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="#/"><img src="/assets/img/logo.webp" alt="" /><span>noughtpad</span></a>
+  <nav class="nav"><a href="#/" data-r="home">Overview</a><a href="#/discover" data-r="discover">Discover</a><a href="#/create" data-r="create">Create</a><a href="#/wallet" data-r="wallet">Wallet</a></nav>
+  <div class="sp"></div>
+  <a class="wal" href="#/wallet"><span class="dim hidem">play</span><b class="num" id="walBal">…</b><span class="dim">ETH</span></a>
+  <a class="btn pri hidem" data-link="pons" href="https://www.ponsfamily.com/launchpad"><img src="/assets/img/pons.png" alt="" />Buy $NOUGHT</a>
+  <a class="btn icon" data-link="x" href="https://x.com" aria-label="X"><img src="/assets/img/x.svg" alt="" style="filter:invert(1)" /></a>
+</header>
+<main id="app"></main>
+<footer><span>noughtpad · built on Robinhood Chain · play ETH beta</span><span><a href="/docs">Docs</a> · <a data-link="dex" href="https://dexscreener.com/robinhood">Chart</a></span></footer>
+<div class="toast" id="toast"></div>
+
+<script type="module">
+import * as E from '/lib/engine.js';
+const S = window.SITE, CA = (S.CA || 'SOON').trim(), HAS = CA !== 'SOON' && CA !== '';
+const $ = id => document.getElementById(id), app = $('app');
+document.querySelectorAll('[data-link="pons"]').forEach(a => { a.href = HAS ? PONS_HOME + '/' + CA : PONS_HOME; a.target = '_blank'; a.rel = 'noopener'; });
+document.querySelectorAll('[data-link="dex"]').forEach(a => { a.href = HAS ? DEX_HOME + '/' + CA : DEX_HOME; a.target = '_blank'; a.rel = 'noopener'; });
+document.querySelectorAll('[data-link="x"]').forEach(a => { a.href = S.X_URL || 'https://x.com'; a.target = '_blank'; a.rel = 'noopener'; });
+
+/* ---------- state ---------- */
+let KEY = null; try { KEY = localStorage.getItem('nought:key'); } catch {}
+if (!/^[a-f0-9]{32}$/.test(KEY || '')) { KEY = [...crypto.getRandomValues(new Uint8Array(16))].map(x => x.toString(16).padStart(2, '0')).join(''); try { localStorage.setItem('nought:key', KEY); } catch {} }
+const ST = { now: 0, pid: null, player: null, rewards: [], prices: { ETH: 2500 }, tokens: [], token: null, skew: 0 };
+const BIG = new Set(['price', 'realEth', 'sold', 'vault', 'fees', 'paidTotal', 'vol24', 'vEth', 'vTok', 'protocol', 'volume', 'heldTotal', 'mine', 'wallet', 'eth', 'tok', 'before', 'after', 'cost', 'amount', 'paid', 'retained', 'bal', 'amt']);
+const big = o => JSON.parse(JSON.stringify(o), (k, v) => BIG.has(k) && typeof v === 'string' && /^-?\d+$/.test(v) ? BigInt(v) : v);
+const now = () => Math.floor(Date.now() / 1000) + ST.skew;
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+/* ---------- format ---------- */
+const f = (x, d = 4) => Number(x).toLocaleString('en-US', { maximumFractionDigits: d });
+const eth = (w, d = 4) => { const n = Number(E.fromWei(w, 9)); return n === 0 ? '0' : n < 0.0001 ? n.toExponential(2) : f(n, d); };
+const tokens = w => { const n = Number(E.fromWei(w, 0)); return n >= 1e9 ? f(n / 1e9, 2) + 'B' : n >= 1e6 ? f(n / 1e6, 2) + 'M' : n >= 1e3 ? f(n / 1e3, 1) + 'K' : f(n, 0); };
+const usd = n => '$' + (n >= 1e6 ? f(n / 1e6, 2) + 'M' : n >= 1e3 ? f(n, 0) : n >= 1 ? f(n, 2) : n > 0 ? f(n, 4) : '0');
+const ethUsd = w => Number(E.fromWei(w, 12)) * (ST.prices.ETH || 0);
+const priceUsd = p => { const n = Number(E.fromWei(p, 18)) * (ST.prices.ETH || 0); return n === 0 ? '$0' : '$' + (n < 0.01 ? n.toPrecision(3) : f(n, 4)); };
+const mcap = p => ethUsd(p * E.SUPPLY / E.WEI);
+const units = (w, sym) => { const n = Number(E.fromWei(w, 12)); return (n === 0 ? '0' : n < 0.0001 ? n.toExponential(2) : f(n, n < 1 ? 6 : 4)) + ' ' + sym; };
+const ago = t => { const s = Math.max(0, now() - t); return s < 60 ? s + 's ago' : s < 3600 ? Math.floor(s / 60) + 'm ago' : s < 86400 ? Math.floor(s / 3600) + 'h ago' : Math.floor(s / 86400) + 'd ago'; };
+const who = pid => pid === ST.pid ? 'you' : pid.startsWith('house') ? 'early wallet ' + pid.slice(5) : pid.slice(0, 6) + '…' + pid.slice(-4);
+const netChip = (n, a) => `<span class="chip"><i class="dot" style="background:${E.NETS[n].color};color:${E.NETS[n].color}"></i>${E.NETS[n].name}${a ? ' · ' + a : ''}</span>`;
+const ico = (t, cls = 'tico') => t.img ? `<img class="${cls}" src="${esc(t.img)}" alt="" loading="lazy">` : `<div class="${cls} ph">${esc(t.sym.slice(0, 2))}</div>`;
+
+/* ---------- api ---------- */
+function toast(t, bad) { const el = $('toast'); el.textContent = t; el.className = 'toast on' + (bad ? ' bad' : ''); clearTimeout(toast.h); toast.h = setTimeout(() => el.className = 'toast', 3400); }
+async function api(path, body) {
+  const r = await fetch(path, body ? { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ key: KEY, ...body }) } : { cache: 'no-store' });
+  const j = await r.json(); if (j.error) throw Error(j.error); return big(j);
+}
+function apply(j) {
+  if (j.now) ST.skew = j.now - Math.floor(Date.now() / 1000);
+  if ('player' in j) ST.player = j.player; if (j.pid) ST.pid = j.pid;
+  if (j.rewards) ST.rewards = j.rewards; if (j.prices) ST.prices = j.prices; if (j.tokens) ST.tokens = j.tokens; if (j.token) ST.token = j.token;
+  $('walBal').textContent = ST.player ? eth(ST.player.wallet, 3) : '0';
+}
+async function act(body, btn) {
+  if (btn) btn.disabled = true;
+  try { const j = await api('/api/action', body); apply(j); if (j.msg) toast(j.msg); return j; }
+  catch (e) { toast(e.message, true); return null; }
+  finally { if (btn) btn.disabled = false; }
+}
+let busy = false;
+async function load() {
+  if (busy) return; busy = true;
+  try { const w = where(); apply(await api('/api/state?key=' + KEY + (w.id ? '&t=' + encodeURIComponent(w.id) : ''))); paint(); }
+  catch (e) { if (!load.warned) { toast(e.message, true); load.warned = true; } }
+  finally { busy = false; }
+}
+
+/* ---------- router ---------- */
+function where() { const h = location.hash || '#/'; const m = h.match(/^#\/t\/([a-z0-9-]+)/); return m ? { r: 'token', id: m[1] } : { r: ({ '#/discover': 'discover', '#/create': 'create', '#/wallet': 'wallet' })[h.split('?')[0]] || 'home' }; }
+let route = '', rid = '';
+function render() {
+  const w = where();
+  document.querySelectorAll('.nav a').forEach(a => a.classList.toggle('on', a.dataset.r === w.r));
+  if (w.r !== route || w.id !== rid) { route = w.r; rid = w.id; if (w.r !== 'token') ST.token = null; ({ home: bindHome, discover: bindDiscover, create: bindCreate, token: bindToken, wallet: bindWallet })[w.r](); scrollTo(0, 0); load(); }
+}
+function paint() { ({ home: paintHome, discover: paintDiscover, create: paintCreate, token: paintToken, wallet: paintWallet })[route](); }
+addEventListener('hashchange', render);
+
+/* ---------- overview ---------- */
+function bindHome() {
+  app.innerHTML = `
+  <div class="hero"><div class="bg"></div><div class="in">
+    <div class="k">Launch · Route · Reward</div>
+    <h1 style="margin-top:14px">Launch a token that <em>pays</em> its holders</h1>
+    <p>Trade on Robinhood Chain, route the creator fee to BNB Chain, Base, Ethereum or Hyperliquid and pay every holder by their share of supply</p>
+    <div class="row"><a class="btn pri big" href="#/create">Launch your token</a><a class="btn big" href="#/discover">Browse tokens</a></div>
+    <div class="nets">${Object.entries(E.NETS).map(([k, n]) => `<div class="net"><i class="dot" style="background:${n.color};color:${n.color}"></i>${n.name}<span>${n.assets.join(' · ')}</span></div>`).join('')}</div>
+  </div></div>
+  <div class="in">
+    <section class="s"><div class="panel ca" id="ca"><div class="lbl">NOUGHTPAD · $NOUGHT · CONTRACT</div><div class="addr ${HAS ? '' : 'soon'}">${HAS ? esc(CA) : 'soon'}</div><div class="cp" id="caCp">[ COPY ]</div></div></section>
+    <section class="s"><div class="between"><h2>New on the pad</h2><a class="btn" href="#/discover">View all</a></div><div class="grid3" id="newest" style="margin-top:16px"></div></section>
+    <section class="s"><div class="between"><h2>The route, live</h2><span class="k" id="routeNote"></span></div>
+      <div class="route" style="margin-top:16px" id="route"></div>
+      <div class="stats" id="gstats"></div>
+    </section>
+    <section class="s faq"><h2 style="margin-bottom:14px">Before you launch</h2>
+      <details><summary>Where does my token launch?</summary><p>On a bonding curve on Robinhood Chain, traded against ETH. You pick one reward network and one asset on it: BNB or USDT on BNB Chain, ETH or USDC on Base and Ethereum, HYPE or USDC on Hyperliquid</p></details>
+      <details><summary>How are rewards calculated?</summary><p>Every round takes a snapshot of holders. A wallet holding 1% of total supply gets 1% of the round. Tokens still sitting on the curve keep their share in the vault, so the other holders are not topped up</p></details>
+      <details><summary>How often do rounds run?</summary><p>The service checks each vault every 30 seconds. A round starts once the vault holds 0.004 ETH and three minutes have passed since the last one. Bridging and buying take about half a minute before the payout lands</p></details>
+      <details><summary>Is the money real?</summary><p>Not in this beta. Trades, vaults and rewards run on a shared server with play ETH, and every visitor sees the same tokens. Reward amounts use live market prices. The $NOUGHT token itself is real and trades on Pons</p></details>
+    </section>
+    <section class="s"><div class="panel pp between"><div><h2>Make your next launch count</h2><p class="dim" style="margin-top:8px">Bring the idea and pick what your holders get paid in</p></div><a class="btn pri big" href="#/create">Create a token</a></div></section>
+  </div>`;
+  $('ca').onclick = () => { if (HAS) { navigator.clipboard && navigator.clipboard.writeText(CA); $('caCp').textContent = '[ COPIED ]'; } else $('caCp').textContent = '[ NOT YET ]'; setTimeout(() => $('caCp').textContent = '[ COPY ]', 1300); };
+  paintHome();
+}
+function card(t) {
+  return `<a class="panel tcard" href="#/t/${t.id}"><div class="row">${ico(t)}<div style="min-width:0"><h3>${esc(t.name)}</h3><div class="dim">$${esc(t.sym)}</div></div></div>
+    <div class="row">${netChip(t.net, t.asset)}</div>
+    <div class="kv"><div><span class="k">Market cap</span><b class="num">${usd(mcap(t.price))}</b></div><div><span class="k">Paid out</span><b class="num">${t.rounds} rounds</b></div></div></a>`;
+}
+function paintHome() {
+  if (!$('newest')) return;
+  $('newest').innerHTML = ST.tokens.slice(0, 3).map(card).join('') || '<div class="panel empty">Loading tokens</div>';
+  const t = now(), last = ST.tokens.filter(x => x.lastRoundAt).sort((a, b) => b.lastRoundAt - a.lastRoundAt)[0];
+  const stage = last ? E.stageOf({ t: last.lastRoundAt }, t) : null, active = stage && stage !== 'paid' ? stage : 'collect';
+  const steps = [['collect', 'Collect fees', '2% of every trade lands in the token vault'], ['bridge', 'Bridge', 'The vault crosses to the reward network'], ['buy', 'Buy rewards', 'Routed ETH buys the chosen asset at market'], ['paid', 'Distribute', '1% of supply receives 1% of the round']];
+  $('route').innerHTML = steps.map(([k, h, p], i) => `<div class="panel step ${k === active ? 'on' : ''}"><div class="n">0${i + 1}</div><h3>${h}</h3><p>${p}</p></div>`).join('');
+  $('routeNote').textContent = last && stage !== 'paid' ? '$' + last.sym + ' round in progress' : last ? 'last round ' + ago(last.lastRoundAt) + ' · $' + last.sym : '';
+  const vault = ST.tokens.reduce((s, x) => s + x.vault, 0n), rounds = ST.tokens.reduce((s, x) => s + x.rounds, 0), wallets = ST.tokens.reduce((s, x) => s + x.wallets, 0);
+  $('gstats').innerHTML = [['Tokens launched', f(ST.tokens.length, 0)], ['Waiting in vaults', usd(ethUsd(vault))], ['Reward rounds', f(rounds, 0)], ['Wallets paid', f(wallets, 0)]].map(([k, v]) => `<div class="panel stat"><span class="k">${k}</span><b class="num">${v}</b></div>`).join('');
+}
+
+/* ---------- discover ---------- */
+let query = '';
+function bindDiscover() {
+  app.innerHTML = `<div class="in"><div class="between" style="margin-top:34px"><div><h1 style="font-size:clamp(34px,5vw,56px)">Discover tokens</h1><p class="dim" style="margin-top:8px">Find a community, open its token and follow the rewards</p></div><span class="chip">Robinhood Chain</span></div>
+    <div class="search"><input id="q" placeholder="Search by name, ticker or id" value="${esc(query)}" autocomplete="off"></div>
+    <div class="between" style="margin:18px 0 10px"><span class="dim" id="count"></span><span class="dim">Newest first</span></div>
+    <div class="panel scroll"><table class="tbl"><thead><tr><th>Token</th><th>Rewards</th><th>Price</th><th>Market cap</th><th>Vault</th><th>Rounds</th><th>Holders</th></tr></thead><tbody id="rows"></tbody></table></div></div>`;
+  $('q').oninput = e => { query = e.target.value; paintDiscover(); };
+  $('rows').onclick = e => { const tr = e.target.closest('tr[data-id]'); if (tr) location.hash = '#/t/' + tr.dataset.id; };
+  paintDiscover();
+}
+function paintDiscover() {
+  if (!$('rows')) return;
+  const q = query.trim().toLowerCase(), list = ST.tokens.filter(t => !q || (t.name + ' ' + t.sym + ' ' + t.id).toLowerCase().includes(q));
+  $('count').textContent = list.length + ' token' + (list.length === 1 ? '' : 's');
+  $('rows').innerHTML = list.map(t => `<tr class="link" data-id="${t.id}"><td><div class="row" style="flex-wrap:nowrap">${ico(t)}<div><b>${esc(t.name)}</b><div class="dim">$${esc(t.sym)}</div></div></div></td><td>${netChip(t.net, t.asset)}</td><td class="num">${priceUsd(t.price)}</td><td class="num">${usd(mcap(t.price))}</td><td class="num">${eth(t.vault)} ETH</td><td class="num">${t.rounds}</td><td class="num">${t.holders}</td></tr>`).join('') || `<tr><td colspan="7" class="empty">${ST.tokens.length ? 'Nothing matches that search' : 'Loading tokens'}</td></tr>`;
+}
+
+/* ---------- create ---------- */
+const C = { step: 1, name: '', sym: '', desc: '', x: '', img: '', net: 'base', asset: 'ETH', dev: '' };
+function bindCreate() {
+  app.innerHTML = `<div class="in"><div class="between" style="margin-top:34px"><div><h1 style="font-size:clamp(34px,5vw,56px)">Create your token</h1><p class="dim" style="margin-top:8px">Details, rewards, review. It goes live on the curve the moment you launch</p></div><button class="btn" id="reset">Start over</button></div>
+    <div class="create" style="margin-top:22px"><div class="panel pp"><div class="steps" id="steps"></div><div id="stepBody"></div></div><div class="panel pp sticky" id="routeCard"></div></div></div>`;
+  $('reset').onclick = () => { Object.assign(C, { step: 1, name: '', sym: '', desc: '', x: '', img: '', net: 'base', asset: 'ETH', dev: '' }); drawStep(); };
+  drawStep();
+}
+function drawStep() {
+  $('steps').innerHTML = ['Details', 'Rewards', 'Review'].map((s, i) => `<button class="${C.step === i + 1 ? 'on' : C.step > i + 1 ? 'done' : ''}" data-s="${i + 1}"><i>${C.step > i + 1 ? '✓' : i + 1}</i><span>${s}</span></button>`).join('');
+  $('steps').onclick = e => { const b = e.target.closest('button'); if (b && (+b.dataset.s < C.step || valid())) { C.step = +b.dataset.s; drawStep(); } };
+  const B = $('stepBody');
+  if (C.step === 1) {
+    B.innerHTML = `<h3>Make it yours</h3><p class="dim">The details people see on Discover and on your token page</p>
+      <div class="row" style="align-items:flex-start;margin-top:14px;gap:18px;flex-wrap:wrap">
+        <div><label class="upload" id="up">${C.img ? `<img src="${C.img}" alt="">` : 'Upload image<br>PNG, JPG or WebP'}<input type="file" id="file" accept="image/png,image/jpeg,image/webp" hidden></label><div class="dim" style="font-size:11.5px;margin-top:6px">Optional · square works best</div></div>
+        <div style="flex:1;min-width:220px">
+          <label class="f"><span class="k">Token name</span><input class="inp" id="cName" maxlength="32" placeholder="Token name" value="${esc(C.name)}"></label>
+          <label class="f"><span class="k">Ticker</span><div class="pre"><span>$</span><input class="inp" id="cSym" maxlength="10" placeholder="TOKEN" value="${esc(C.sym)}"></div></label>
+        </div></div>
+      <label class="f"><span class="between"><span class="k">Description</span><span class="dim" id="dcount">${C.desc.length} / 256</span></span><textarea class="inp" id="cDesc" maxlength="256" placeholder="Describe your token">${esc(C.desc)}</textarea></label>
+      <label class="f"><span class="between"><span class="k">X / Twitter</span><span class="dim">Optional</span></span><input class="inp" id="cX" placeholder="https://x.com/username" value="${esc(C.x)}"></label>
+      <div class="between" style="margin-top:20px"><span class="dim">Trading fee 3% · 1% protocol + 2% to your vault</span><button class="btn pri" id="next">Choose rewards →</button></div>`;
+    $('cName').oninput = e => { C.name = e.target.value; paintRouteCard(); };
+    $('cSym').oninput = e => { e.target.value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, ''); C.sym = e.target.value; paintRouteCard(); };
+    $('cDesc').oninput = e => { C.desc = e.target.value; $('dcount').textContent = C.desc.length + ' / 256'; };
+    $('cX').oninput = e => { C.x = e.target.value.trim(); };
+    $('file').onchange = async e => { const file = e.target.files[0]; if (!file) return; if (file.size > 5e6) return toast('Up to 5 MB please', true); try { C.img = await shrink(file); drawStep(); } catch { toast('That image could not be read', true); } };
+    $('next').onclick = () => { if (valid(true)) { C.step = 2; drawStep(); } };
+  } else if (C.step === 2) {
+    B.innerHTML = `<h3>Choose the rewards</h3><p class="dim">One network and one asset. Holders are paid in it every round</p>
+      <div class="k" style="margin-top:18px">Network</div><div class="picks" id="nets">${Object.entries(E.NETS).map(([k, n]) => `<button class="pick ${C.net === k ? 'on' : ''}" data-n="${k}"><i class="dot" style="background:${n.color};color:${n.color}"></i><div><b>${n.name}</b><small>${n.assets.join(' or ')}</small></div></button>`).join('')}</div>
+      <div class="k" style="margin-top:18px">Asset</div><div class="picks" id="assets">${E.NETS[C.net].assets.map(a => `<button class="pick ${C.asset === a ? 'on' : ''}" data-a="${a}"><div><b>${a}</b><small>${ST.prices[a] ? 'market $' + f(ST.prices[a], ST.prices[a] < 10 ? 4 : 2) : ''} · ${a === 'USDC' || a === 'USDT' ? 'stable' : 'native'}</small></div></button>`).join('')}</div>
+      <div class="between" style="margin-top:20px"><button class="btn" id="back">← Back</button><button class="btn pri" id="next">Review →</button></div>`;
+    $('nets').onclick = e => { const b = e.target.closest('[data-n]'); if (b) { C.net = b.dataset.n; if (!E.NETS[C.net].assets.includes(C.asset)) C.asset = E.NETS[C.net].assets[0]; drawStep(); } };
+    $('assets').onclick = e => { const b = e.target.closest('[data-a]'); if (b) { C.asset = b.dataset.a; drawStep(); } };
+    $('back').onclick = () => { C.step = 1; drawStep(); };
+    $('next').onclick = () => { C.step = 3; drawStep(); };
+  } else {
+    B.innerHTML = `<h3>Review</h3><p class="dim">Terms are fixed once the token is live</p>
+      <div class="row" style="margin-top:16px">${C.img ? `<img class="tico" src="${C.img}" alt="">` : `<div class="tico ph">${esc(C.sym.slice(0, 2))}</div>`}<div><h3>${esc(C.name)}</h3><div class="dim">$${esc(C.sym)}</div></div></div>
+      <div class="list" style="margin-top:14px">
+        <div><span class="dim">Chain</span><span>Robinhood Chain · traded against ETH</span></div>
+        <div><span class="dim">Supply</span><span>1,000,000,000 · 793.1M on the curve</span></div>
+        <div><span class="dim">Trading fee</span><span>3% · 2% to your vault</span></div>
+        <div><span class="dim">Rewards</span><span>${C.asset} on ${E.NETS[C.net].name}</span></div>
+        <div><span class="dim">Round starts at</span><span>0.004 ETH in the vault</span></div>
+        ${C.x ? `<div><span class="dim">X</span><span>${esc(C.x)}</span></div>` : ''}
+      </div>
+      <label class="f"><span class="between"><span class="k">First buy</span><span class="dim">Optional · up to 2 ETH</span></span><div class="pre"><input class="inp" id="dev" inputmode="decimal" placeholder="0.00" value="${esc(C.dev)}"><span style="padding-right:14px">ETH</span></div></label>
+      <div class="dim" id="devq" style="margin-top:6px;font-size:12px"></div>
+      <div class="between" style="margin-top:20px"><button class="btn" id="back">← Back</button><button class="btn pri big" id="launch">Launch $${esc(C.sym)}</button></div>`;
+    const dq = () => { try { if (!C.dev) { $('devq').textContent = 'Balance ' + (ST.player ? eth(ST.player.wallet) : '0') + ' play ETH'; return; } const M = { vEth: E.V_ETH0, vTok: E.V_TOK0, sold: 0n, realEth: 0n }, q = E.quoteBuy(M, E.toWei(C.dev)); $('devq').textContent = 'You receive ' + tokens(q.out) + ' $' + C.sym + ' · ' + f(Number(q.out * 10000n / E.SUPPLY) / 100, 2) + '% of supply'; } catch (e) { $('devq').textContent = e.message; } };
+    $('dev').oninput = e => { C.dev = e.target.value.trim(); dq(); }; dq();
+    $('back').onclick = () => { C.step = 2; drawStep(); };
+    $('launch').onclick = async e => {
+      const j = await act({ type: 'create', name: C.name, sym: C.sym, desc: C.desc, x: C.x, img: C.img, net: C.net, asset: C.asset, dev: C.dev || '' }, e.target);
+      if (j && j.token) { Object.assign(C, { step: 1, name: '', sym: '', desc: '', x: '', img: '', dev: '' }); location.hash = '#/t/' + j.token.id; }
+    };
+  }
+  paintRouteCard();
+}
+function paintCreate() { if ($('routeCard')) paintRouteCard(); }
+function valid(say) {
+  const ok = C.name.trim().length >= 2 && C.sym.length >= 2, xok = !C.x || /^https:\/\/(x|twitter)\.com\/[A-Za-z0-9_]{1,15}(\/status\/\d+)?\/?$/.test(C.x);
+  if (say && !ok) toast('Name and ticker need at least 2 characters', true);
+  else if (say && !xok) toast('Paste an X profile or post link', true);
+  return ok && xok;
+}
+function paintRouteCard() {
+  const n = E.NETS[C.net];
+  $('routeCard').innerHTML = `<div class="between"><h3>Your reward route</h3><span class="svc"><i class="live"></i><span class="dim">Online</span></span></div>
+    <div class="flow">
+      <div><i>1</i><b>$${esc(C.sym || 'TOKEN')}</b><span>Robinhood Chain<br>3% fee on trades</span></div>
+      <div><i>2</i>Fee vault<span>2% of each trade<br>checked every 30s</span></div>
+      <div><i>3</i>Bridge &amp; buy<span>${n.name}<br>${C.asset} at market</span></div>
+      <div><i>4</i>Token holders<span>share of supply<br>fixed snapshot</span></div>
+    </div>
+    <p class="dim" style="margin-top:12px;font-size:12px">Holding 1% of supply pays 1% of the round. Curve and vault shares stay in the vault</p>`;
+}
+function shrink(file) {
+  return new Promise((ok, no) => {
+    const img = new Image(), url = URL.createObjectURL(file);
+    img.onload = () => { const c = document.createElement('canvas'); c.width = c.height = 160; const s = Math.max(160 / img.width, 160 / img.height), w = img.width * s, h = img.height * s; c.getContext('2d').drawImage(img, (160 - w) / 2, (160 - h) / 2, w, h); URL.revokeObjectURL(url); let d = c.toDataURL('image/webp', .86); if (!d.startsWith('data:image/webp')) d = c.toDataURL('image/jpeg', .86); ok(d); };
+    img.onerror = no; img.src = url;
+  });
+}
+
+/* ---------- token ---------- */
+let side = 'buy', amt = '', ticketFor = '';
+function bindToken() { app.innerHTML = '<div class="in"><div class="empty" style="margin-top:60px">Loading token</div></div>'; ticketFor = ''; }
+function paintToken() {
+  const T = ST.token; if (!T) return;
+  if (ticketFor !== T.id) { ticketFor = T.id; amt = ''; side = 'buy'; skeleton(T); }
+  const t = now(), share = T.mine * 10000n / E.SUPPLY, px = ST.prices;
+  $('tstats').innerHTML = [['Price', priceUsd(T.price)], ['Market cap', usd(mcap(T.price))], ['Curve reserves', eth(T.realEth, 3) + ' ETH'], ['24h volume', usd(ethUsd(T.vol24))], ['24h change', T.change24 == null ? '—' : `<span class="${T.change24 >= 0 ? 'up' : 'down'}">${T.change24 >= 0 ? '+' : ''}${f(T.change24, 2)}%</span>`]].map(([k, v]) => `<div><span class="k">${k}</span><b class="num">${v}</b></div>`).join('');
+  drawChart(T);
+  $('curveLine').innerHTML = `<span class="dim">Curve sold</span><span class="num">${f(Number(T.sold * 10000n / E.CURVE_TOKENS) / 100, 2)}%</span>`;
+  $('curveBar').style.width = Number(T.sold * 10000n / E.CURVE_TOKENS) / 100 + '%';
+  quote();
+  $('mine').innerHTML = `<div class="kv"><div><span class="k">You hold</span><b class="num">${tokens(T.mine)}</b></div><div><span class="k">Worth</span><b class="num">${usd(ethUsd(T.mine > 0n ? sellValue(T, T.mine) : 0n))}</b></div><div><span class="k">Share of supply</span><b class="num">${f(Number(share) / 100, 2)}%</b></div><div><span class="k">Next round est.</span><b class="num">${units(estReward(T, T.mine), T.asset)}</b></div></div>`;
+  /* rewards card */
+  const vaultPct = Math.min(100, Number(T.vault * 10000n / E.THRESHOLD) / 100), s = T.service, last = T.rounds[0];
+  const nextCheck = Math.max(0, (T.lastCheck + E.CHECK_S) - t), cool = Math.max(0, T.lastRoundAt + E.COOLDOWN_S - t), stage = last ? E.stageOf(last, t) : null;
+  const order = E.STAGES.map(x => x[0]), si = stage ? order.indexOf(stage) : -1, running = stage && stage !== 'paid';
+  const status = running ? { collect: 'Taking the vault', bridge: 'Bridging to ' + E.NETS[T.net].name, buy: 'Buying ' + T.asset }[stage] : T.vault < E.THRESHOLD ? 'Collecting fees' : cool > 0 ? 'Round ready in ' + mmss(cool) : 'Starting at the next check';
+  $('rw').innerHTML = `<div class="between"><h3>Holder rewards</h3><span class="svc"><i class="live"></i><span class="dim">Online · check in ${nextCheck}s</span></span></div>
+    <div class="row" style="margin-top:10px"><b class="d" style="font-size:26px">${T.asset}</b>${netChip(T.net)}</div>
+    <p class="dim" style="font-size:12.5px;margin-top:4px">Paid on ${E.NETS[T.net].name} by each wallet's share of $${esc(T.sym)}</p>
+    <div class="between" style="margin-top:14px"><span class="dim">Vault</span><span class="num">${eth(T.vault, 5)} / ${eth(E.THRESHOLD, 3)} ETH</span></div><div class="bar"><i style="width:${vaultPct}%"></i></div>
+    <div class="pipe">${[['collect', 'Collect'], ['bridge', 'Bridge'], ['buy', 'Buy'], ['paid', 'Paid']].map(([k, l], i) => `<div class="${running ? (i < si ? 'done' : i === si ? 'on' : '') : stage === 'paid' ? 'done' : ''}">${l}</div>`).join('')}</div>
+    <div class="list">
+      <div><span class="dim">Reward activity</span><span>${status}</span></div>
+      <div><span class="dim">Last distribution</span><span>${last ? ago(last.t) + ' · ' + units(last.paid, last.asset) : 'None yet'}</span></div>
+      <div><span class="dim">Total paid</span><span class="num">${units(T.paidTotal, T.asset)}</span></div>
+      <div><span class="dim">Wallets paid</span><span class="num">${T.wallets || '—'}</span></div>
+    </div>`;
+  $('rounds').innerHTML = T.rounds.length ? `<table class="rtbl"><thead><tr><th>Round</th><th>When</th><th>Vault in</th><th>Bought</th><th>To holders</th><th>Kept</th><th>Wallets</th></tr></thead><tbody>${T.rounds.map(r => {
+    const st = E.stageOf(r, t); return `<tr><td>#${r.n}</td><td>${ago(r.t)}${st !== 'paid' ? ' · <span class="up">' + st + '</span>' : ''}</td><td class="num">${eth(r.eth, 5)} ETH</td><td class="num">${units(r.amount, r.asset)}<div class="dim">at $${f(r.assetUsd, r.assetUsd < 10 ? 4 : 2)}</div></td><td class="num">${units(r.paid, r.asset)}</td><td class="num dim">${units(r.retained, r.asset)}</td><td class="num">${r.wallets}</td></tr>`;
+  }).join('')}</tbody></table>` : '<div class="empty">The first round runs when the vault reaches 0.004 ETH</div>';
+  const top = T.rounds[0] && T.rounds[0].top || [];
+  $('holders').innerHTML = T.holders.length ? T.holders.map(h => `<div class="${h.mine ? 'me' : ''}"><span>${who(h.pid)}${h.creator ? ' <span class="chip">creator</span>' : ''}<div class="dim" style="font-size:11.5px">${f(Number(h.bal * 10000n / E.SUPPLY) / 100, 2)}% · next ${units(estReward(T, h.bal), T.asset)}</div></span><span class="num">${tokens(h.bal)}</span></div>`).join('') + `<div><span class="dim">Curve &amp; vault</span><span class="num dim">${tokens(E.SUPPLY - T.heldTotal)}</span></div>` : '<div class="empty">No holders yet</div>';
+  $('trades').innerHTML = T.trades.length ? T.trades.slice(-14).reverse().map(x => `<div><span><span class="${x.side === 'buy' ? 'up' : 'down'}">${x.side}</span> ${tokens(x.tok)} · ${who(x.pid)}<div class="dim" style="font-size:11.5px">${ago(x.t)}</div></span><span class="num">${eth(x.eth)} ETH</span></div>`).join('') : '<div class="empty">No trades yet</div>';
+}
+const mmss = s => Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
+function sellValue(T, n) { try { return E.quoteSell(T, n).out; } catch { return 0n; } }
+function estReward(T, bal) {
+  if (!bal || !ST.prices[T.asset]) return 0n;
+  const v = T.vault - E.ceilDiv(T.vault * E.BRIDGE_BPS, 10000n);
+  return E.assetToUnits(v, ST.prices.ETH, ST.prices[T.asset]) * bal / E.SUPPLY;
+}
+function skeleton(T) {
+  app.innerHTML = `<div class="in">
+    <div style="margin-top:22px"><a class="dim" href="#/discover">← Back to Discover</a></div>
+    <div class="thead">${ico(T)}<div style="min-width:0"><div class="row"><span class="chip">$${esc(T.sym)}</span><span class="chip">Robinhood Chain</span>${netChip(T.net, T.asset)}</div><h1 style="margin-top:8px">${esc(T.name)}</h1></div>
+      <div class="sp"></div>${T.x ? `<a class="btn" href="${esc(T.x)}" target="_blank" rel="noopener">X ↗</a>` : ''}</div>
+    ${T.desc ? `<p style="margin-top:12px;max-width:70ch;color:#cfc8ea">${esc(T.desc)}</p>` : ''}
+    <div class="tstats" id="tstats"></div>
+    <div class="lay">
+      <div class="col">
+        <div class="panel pp"><div class="between"><h3>Price chart</h3><span class="dim" style="font-size:12px">Curve price · every trade on this pad</span></div><div class="chart" id="chart" style="margin-top:10px"></div></div>
+        <div class="panel pp"><h3>Reward rounds</h3><div class="scroll" id="rounds" style="margin-top:8px"></div></div>
+        <div class="panel pp"><div class="between"><h3>Holders</h3><span class="dim" style="font-size:12px">next round estimate from the current vault</span></div><div class="list" id="holders"></div></div>
+      </div>
+      <div class="col">
+        <div class="panel pp">
+          <div class="tabs"><button data-side="buy">Buy</button><button data-side="sell" class="sell">Sell</button></div>
+          <label class="f"><span class="between"><span class="k" id="amtLbl">Amount</span><span class="dim" id="balLine"></span></span><div class="pre"><input class="inp" id="amt" inputmode="decimal" placeholder="0.00"><span style="padding-right:14px" id="unit">ETH</span></div></label>
+          <div class="presets" id="presets"></div>
+          <div class="quote" id="quote"></div>
+          <button class="btn pri big" id="go" style="width:100%;margin-top:14px">Buy</button>
+          <div class="quote" style="margin-top:14px"><div id="curveLine"></div></div><div class="bar"><i id="curveBar"></i></div>
+        </div>
+        <div class="panel pp" id="mine"></div>
+        <div class="panel pp" id="rw"></div>
+        <div class="panel pp"><h3>Trades</h3><div class="list" id="trades"></div></div>
+      </div>
+    </div></div>`;
+  document.querySelector('.tabs').onclick = e => { const b = e.target.closest('button'); if (b) { side = b.dataset.side; amt = ''; $('amt').value = ''; ticket(); } };
+  $('amt').oninput = e => { amt = e.target.value.trim(); quote(); };
+  $('presets').onclick = e => { const b = e.target.closest('button'); if (!b) return; amt = b.dataset.v; $('amt').value = side === 'buy' ? amt : b.textContent; quote(); };
+  $('go').onclick = async e => {
+    const body = side === 'buy' ? { type: 'buy', t: ST.token.id, eth: amt } : amt.endsWith('%') ? { type: 'sell', t: ST.token.id, pct: parseFloat(amt) } : { type: 'sell', t: ST.token.id, tok: amt };
+    const j = await act(body, e.target); if (j) { amt = ''; $('amt').value = ''; paintToken(); }
+  };
+  ticket();
+}
+function ticket() {
+  document.querySelectorAll('.tabs button').forEach(b => b.classList.toggle('on', b.dataset.side === side));
+  $('unit').textContent = side === 'buy' ? 'ETH' : '$' + ST.token.sym;
+  $('amt').placeholder = side === 'buy' ? '0.00' : 'tokens or 50%';
+  $('presets').innerHTML = side === 'buy' ? ['0.01', '0.05', '0.1', '0.5'].map(v => `<button data-v="${v}">${v} ETH</button>`).join('') : ['25%', '50%', '100%'].map(v => `<button data-v="${v}">${v}</button>`).join('');
+  const go = $('go'); go.textContent = side === 'buy' ? 'Buy $' + ST.token.sym : 'Sell $' + ST.token.sym; go.style.background = side === 'sell' ? 'var(--red)' : ''; go.style.borderColor = side === 'sell' ? 'var(--red)' : '';
+  quote();
+}
+function quote() {
+  const T = ST.token; if (!T || !$('quote')) return;
+  $('balLine').textContent = side === 'buy' ? 'Balance ' + (ST.player ? eth(ST.player.wallet) : '0') + ' ETH' : 'You hold ' + tokens(T.mine);
+  let html = '';
+  try {
+    if (!amt) throw 0;
+    if (side === 'buy') {
+      const q = E.quoteBuy(T, E.toWei(amt)); const after = (T.vEth + q.net) * E.WEI / (T.vTok - q.out);
+      html = `<div><span class="dim">You receive</span><span class="num">${tokens(q.out)} $${esc(T.sym)}</span></div><div><span class="dim">Fee 3%</span><span class="num">${eth(q.fee, 6)} ETH · ${eth(q.fee * 2n / 3n, 6)} to vault</span></div><div><span class="dim">Price impact</span><span class="num">${f(Number((after - T.price) * 10000n / T.price) / 100, 2)}%</span></div><div><span class="dim">Share of supply</span><span class="num">${f(Number((T.mine + q.out) * 10000n / E.SUPPLY) / 100, 2)}%</span></div>`;
+    } else {
+      const n = amt.endsWith('%') ? T.mine * BigInt(Math.round(parseFloat(amt) * 100)) / 10000n : E.toWei(amt);
+      if (n > T.mine) throw Error('You hold ' + tokens(T.mine));
+      const q = E.quoteSell(T, n);
+      html = `<div><span class="dim">You sell</span><span class="num">${tokens(n)} $${esc(T.sym)}</span></div><div><span class="dim">You receive</span><span class="num">${eth(q.out, 6)} ETH</span></div><div><span class="dim">Fee 3%</span><span class="num">${eth(q.fee, 6)} ETH</span></div>`;
+    }
+  } catch (e) { html = e && e.message ? `<div><span class="down">${esc(e.message)}</span></div>` : ''; }
+  $('quote').innerHTML = html;
+}
+function drawChart(T) {
+  const el = $('chart'), W = el.clientWidth || 600, H = el.clientHeight || 280, tr = T.trades;
+  if (tr.length < 1) { el.innerHTML = '<div class="empty">The chart starts with the first trade</div>'; return; }
+  const pts = [{ t: tr[0].t - 1, p: Number(tr[0].before) }, ...tr.map(x => ({ t: x.t, p: Number(x.after), side: x.side }))];
+  const lo = Math.min(...pts.map(p => p.p)), hi = Math.max(...pts.map(p => p.p)), pad = (hi - lo) * .12 || hi * .05;
+  const X = i => 8 + i * (W - 70) / Math.max(1, pts.length - 1), Y = p => 12 + (H - 34) * (1 - (p - lo + pad) / (hi - lo + 2 * pad));
+  const d = pts.map((p, i) => (i ? 'L' : 'M') + X(i).toFixed(1) + ' ' + Y(p.p).toFixed(1)).join(' ');
+  const lab = p => priceUsd(BigInt(Math.round(p)));
+  el.innerHTML = `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none"><defs><linearGradient id="cg" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#b9a6ff" stop-opacity=".35"/><stop offset="1" stop-color="#b9a6ff" stop-opacity="0"/></linearGradient></defs>
+    ${[0, .5, 1].map(k => `<line x1="0" x2="${W - 60}" y1="${12 + (H - 34) * k}" y2="${12 + (H - 34) * k}" stroke="#28244a" stroke-dasharray="3 5"/><text x="${W - 56}" y="${16 + (H - 34) * k}" fill="#8f89b0" font-size="10" font-family="DM Mono">${lab(hi + pad - (hi - lo + 2 * pad) * k)}</text>`).join('')}
+    <path d="${d} L ${X(pts.length - 1)} ${H - 22} L ${X(0)} ${H - 22} Z" fill="url(#cg)"/><path d="${d}" fill="none" stroke="#b9a6ff" stroke-width="2" stroke-linejoin="round"/>
+    ${pts.slice(1).map((p, i) => `<circle cx="${X(i + 1)}" cy="${Y(p.p)}" r="2.6" fill="${p.side === 'buy' ? '#7ef0c9' : '#ff7a8a'}"/>`).join('')}</svg>`;
+}
+
+/* ---------- wallet ---------- */
+function bindWallet() {
+  app.innerHTML = `<div class="in"><div class="between" style="margin-top:34px"><div><h1 style="font-size:clamp(34px,5vw,56px)">Wallet</h1><p class="dim" style="margin-top:8px">Play ETH lives on the server under a key kept in this browser</p></div></div>
+    <div class="lay"><div class="col"><div class="panel pp"><h3>Rewards received</h3><div class="list" id="wRewards"></div></div><div class="panel pp"><h3>Holdings</h3><div class="list" id="wHold"></div></div></div>
+    <div class="col"><div class="panel pp" id="wBal"></div><div class="panel pp"><h3>Totals by asset</h3><div class="list" id="wTot"></div></div></div></div></div>`;
+  paintWallet();
+}
+function paintWallet() {
+  if (!$('wBal')) return;
+  const P = ST.player, t = now(), wait = P ? P.faucetAt + 86400 - t : 0;
+  $('wBal').innerHTML = `<span class="k">Play ETH</span><div class="d num" style="font-size:40px;font-weight:800;margin-top:4px">${P ? eth(P.wallet) : '0'}</div><div class="dim">${P ? usd(ethUsd(P.wallet)) + ' at market · id ' + P.pid.slice(0, 8) : 'Your wallet opens with 10 play ETH'}</div>
+    <button class="btn pri" id="faucet" style="margin-top:14px" ${P && wait > 0 ? 'disabled' : ''}>${P && wait > 0 ? 'Faucet in ' + Math.ceil(wait / 3600) + 'h' : '+5 play ETH'}</button>`;
+  $('faucet').onclick = e => act({ type: 'faucet' }, e.target).then(() => paintWallet());
+  const R = ST.rewards;
+  $('wRewards').innerHTML = R.length ? R.slice(0, 40).map(r => `<div><span><a href="#/t/${r.id}">$${esc(r.sym)}</a> · round #${r.n}<div class="dim" style="font-size:11.5px">${r.at > t ? '<span class="up">arriving on ' + E.NETS[r.net].name + ' in ' + (r.at - t) + 's</span>' : 'landed on ' + E.NETS[r.net].name + ' ' + ago(r.at)}</div></span><span class="num">${units(r.amt, r.asset)}<div class="dim" style="font-size:11.5px;text-align:right">${usd(Number(E.fromWei(r.amt, 12)) * (ST.prices[r.asset] || r.usd))}</div></span></div>`).join('') : '<div class="empty">Hold a token and your share of every round shows up here</div>';
+  const tot = {}; R.filter(r => r.at <= t).forEach(r => { tot[r.asset] = (tot[r.asset] || 0n) + r.amt; });
+  $('wTot').innerHTML = Object.keys(tot).length ? Object.entries(tot).map(([a, v]) => `<div><span>${a}</span><span class="num">${units(v, a)} · ${usd(Number(E.fromWei(v, 12)) * (ST.prices[a] || 0))}</span></div>`).join('') : '<div class="empty">Nothing landed yet</div>';
+  const H = (P ? P.tokens : []).map(id => ST.tokens.find(x => x.id === id)).filter(Boolean);
+  $('wHold').innerHTML = H.length ? H.map(x => `<div><span class="row" style="flex-wrap:nowrap">${ico(x, 'tico" style="width:34px;height:34px;border-radius:10px')}<a href="#/t/${x.id}">${esc(x.name)} <span class="dim">$${esc(x.sym)}</span></a></span><span class="dim">${netChip(x.net, x.asset)}</span></div>`).join('') : '<div class="empty">No tokens yet · <a href="#/discover" class="up">browse</a></div>';
+}
+
+/* ---------- boot ---------- */
+render();
+api('/api/action', { type: 'hello' }).then(apply).catch(() => {});
+setInterval(() => { if (!document.hidden) load(); }, 4000);
+setInterval(() => { if (document.hidden) return; if (route === 'token' && ST.token) paintToken(); if (route === 'home') paintHome(); if (route === 'wallet') paintWallet(); }, 1000);
+</script>
+</body>
+</html>

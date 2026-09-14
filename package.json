@@ -1,0 +1,8 @@
+{
+  "name": "noughtpad",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@upstash/redis": "^1.38.4"
+  }
+}
