@@ -2,7 +2,7 @@ import { redis } from '../lib/store.js';
 export default async function handler(req, res) {
   try {
     const id = String((req.query || {}).id || '');
-    const s = /^[a-z0-9-]{3,20}$/.test(id) ? await redis().get('nt:img:' + id) : null;
+    const s = /^[a-z0-9-]{3,20}$/.test(id) ? await redis().get('np:img:' + id) : null;
     const m = s && s.match(/^data:(image\/(?:webp|png|jpeg));base64,(.+)$/);
     if (!m) { res.statusCode = 404; return res.end(); }
     res.setHeader('content-type', m[1]);

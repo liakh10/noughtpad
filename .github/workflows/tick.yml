@@ -1,0 +1,13 @@
+name: reward service
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch: {}
+jobs:
+  tick:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - name: Advance sweeps and reward rounds
+        run: |
+          curl -sS --max-time 300 -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" https://noughtpad.vercel.app/api/tick
